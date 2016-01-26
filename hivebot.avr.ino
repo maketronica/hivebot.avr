@@ -47,6 +47,7 @@ void loop()
     
     full_data_to_send = "";
     add_pair(F("hID"), String(hive_id()));
+    add_pair(F("bID"), String(BOT_ID));
     add_pair(F("ut"), String(uptime_minutes));
     add_pair(F("botT"), String((int)(dhtbot.readTemperature()*10)));
     add_pair(F("botH"), String((int)(dhtbot.readHumidity()*10)));
