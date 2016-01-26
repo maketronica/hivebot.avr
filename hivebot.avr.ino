@@ -6,10 +6,11 @@ const byte DHT_BOT_PIN = 5;
 const byte DHT_BROOD_PIN = 6;
 const byte ACTIVITY_INDICATOR_PIN = 13;
 
-
-const float DAYS_PER_ROLLOVER = 4.971026963;
+const unsigned long MAX_MILLIS = pow(2, sizeof(millis())*8 );
 const unsigned long MILLIS_PER_DAY = 86400000;
 const unsigned int MINUTES_PER_DAY = 1440;
+const float DAYS_PER_ROLLOVER = MAX_MILLIS/(float)MILLIS_PER_DAY;
+
 const unsigned long MILLIS_PER_BROADCAST = 30000; //60000;
 
 const byte BOT_ID = EEPROM.read(0);
@@ -58,8 +59,8 @@ void loop()
 }
 
 void updateUptime(){
-  if( millis()>=3000000000 ) { uptime_impending_rollover = true; }
-  if( millis()<=100000 && uptime_impending_rollover == true ) {
+  if( millis() >= (MAX_MILLIS/2)) { uptime_impending_rollover = true; }
+  if( millis()< (MAX_MILLIS/2) && uptime_impending_rollover == true ) {
     uptime_rollover_counter++;
     uptime_impending_rollover = false;
   }
