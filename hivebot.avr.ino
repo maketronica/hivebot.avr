@@ -46,13 +46,13 @@ void loop()
     updateUptime();
     
     full_data_to_send = "";
-    add_pair(F("hID"), String(hive_id()));
-    add_pair(F("bID"), String(BOT_ID));
-    add_pair(F("ut"), String(uptime_minutes));
-    add_pair(F("botT"), String((int)(dhtbot.readTemperature()*10)));
-    add_pair(F("botH"), String((int)(dhtbot.readHumidity()*10)));
-    add_pair(F("brdT"), String((int)(dhtbrood.readTemperature()*10)));
-    add_pair(F("brdH"), String((int)(dhtbrood.readHumidity()*10)));
+    add_pair(F("hive_id"), String(hive_id()));
+    add_pair(F("bot_id"), String(BOT_ID));
+    add_pair(F("bot_uptime"), String(uptime_minutes));
+    add_pair(F("bot_temp"), String((int)(dhtbot.readTemperature()*10)));
+    add_pair(F("bot_humidity"), String((int)(dhtbot.readHumidity()*10)));
+    add_pair(F("brood_temp"), String((int)(dhtbrood.readTemperature()*10)));
+    add_pair(F("brood_humidity"), String((int)(dhtbrood.readHumidity()*10)));
     
     send_data(full_data_to_send);
     digitalWrite(ACTIVITY_INDICATOR_PIN, LOW);
