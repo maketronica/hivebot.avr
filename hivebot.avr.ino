@@ -11,7 +11,7 @@ const unsigned long MILLIS_PER_DAY = 86400000;
 const unsigned int MINUTES_PER_DAY = 1440;
 const float DAYS_PER_ROLLOVER = MAX_MILLIS/(float)MILLIS_PER_DAY;
 
-const unsigned long MILLIS_PER_BROADCAST = 30000; //60000;
+const unsigned long MILLIS_PER_BROADCAST = 60000;
 
 const byte BOT_ID = EEPROM.read(0);
 
