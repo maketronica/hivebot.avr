@@ -1,9 +1,12 @@
 #include <DHT.h>
 #include <EEPROM.h>
+#include "HX711/HX711.h"
 
 const byte HIVE_ID_PINS[3] = { 2, 3, 4 }; 
 const byte DHT_BOT_PIN = 5;
 const byte DHT_BROOD_PIN = 6;
+const byte HX711_CLK = 8;
+const byte HX711_DOUT = 9;
 const byte ACTIVITY_INDICATOR_PIN = 13;
 
 const unsigned long MAX_MILLIS = pow(2, sizeof(millis())*8 );
@@ -11,7 +14,10 @@ const unsigned long MILLIS_PER_DAY = 86400000;
 const unsigned int MINUTES_PER_DAY = 1440;
 const float DAYS_PER_ROLLOVER = MAX_MILLIS/(float)MILLIS_PER_DAY;
 
-const unsigned long MILLIS_PER_BROADCAST = 60000;
+const float SCALE_CALIBRATION_FACTOR = 13500;
+const float SCALE_ZERO_FACTOR = 103727;
+
+const unsigned long MILLIS_PER_BROADCAST = 6000;
 
 const byte BOT_ID = EEPROM.read(0);
 
@@ -23,6 +29,7 @@ unsigned int uptime_rollover_counter = 0;
 
 DHT dhtbot(DHT_BOT_PIN, DHT22);                       //Electronics Cabinet Temp/Humidity Sensor
 DHT dhtbrood(DHT_BROOD_PIN, DHT22);                   //Brood Box Temp/Humidity Sensor
+HX711 scale(HX711_DOUT, HX711_CLK);
 
 void setup()
 {
@@ -30,14 +37,17 @@ void setup()
     //  Uncomment below lines and update to
     //  set botid on new board and then
     //  recomment out.
-    //byte new_bot_id = 0;
+    //byte new_bot_id = 1;
     //EEPROM.update(0, new_bot_id);
     // >>> END NEW BOT ID SETUP <<<
-    
+
     pinMode(ACTIVITY_INDICATOR_PIN, OUTPUT);
     Serial.begin(115200);
+  
     dhtbot.begin();
     dhtbrood.begin();
+    scale.set_scale(SCALE_CALIBRATION_FACTOR);
+    scale.set_offset(SCALE_ZERO_FACTOR);
 }
 
 void loop()
@@ -53,6 +63,7 @@ void loop()
     add_pair(F("bot_humidity"), String((int)(dhtbot.readHumidity()*10)));
     add_pair(F("brood_temp"), String((int)(dhtbrood.readTemperature()*10)));
     add_pair(F("brood_humidity"), String((int)(dhtbrood.readHumidity()*10)));
+    add_pair(F("hive_lbs"), String(scale.get_units()));
     
     send_data(full_data_to_send);
     digitalWrite(ACTIVITY_INDICATOR_PIN, LOW);
