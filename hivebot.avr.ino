@@ -1,4 +1,4 @@
-#include <DHT.h>
+#include "DHT/DHT.h"
 #include <EEPROM.h>
 #include "HX711/HX711.h"
 
