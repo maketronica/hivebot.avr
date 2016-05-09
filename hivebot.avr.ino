@@ -63,7 +63,7 @@ void loop()
     add_pair(F("bot_humidity"), String((int)(dhtbot.readHumidity()*10)));
     add_pair(F("brood_temp"), String((int)(dhtbrood.readTemperature()*10)));
     add_pair(F("brood_humidity"), String((int)(dhtbrood.readHumidity()*10)));
-    add_pair(F("hive_lbs"), String((int)scale.get_units()*100));
+    add_pair(F("hive_lbs"), String((int)(scale.get_units()*100)));
     
     send_data(full_data_to_send);
     digitalWrite(ACTIVITY_INDICATOR_PIN, LOW);
