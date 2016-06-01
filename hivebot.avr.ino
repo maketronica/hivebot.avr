@@ -5,6 +5,7 @@
 const byte HIVE_ID_PINS[3] = { 2, 3, 4 }; 
 const byte DHT_BOT_PIN = 5;
 const byte DHT_BROOD_PIN = 6;
+const byte DHT_AMBIENT_PIN = 7;
 const byte HX711_CLK = 8;
 const byte HX711_DOUT = 9;
 const byte ACTIVITY_INDICATOR_PIN = 13;
@@ -29,6 +30,7 @@ unsigned int uptime_rollover_counter = 0;
 
 DHT dhtbot(DHT_BOT_PIN, DHT22);                       //Electronics Cabinet Temp/Humidity Sensor
 DHT dhtbrood(DHT_BROOD_PIN, DHT22);                   //Brood Box Temp/Humidity Sensor
+DHT dhtambient(DHT_AMBIENT_PIN, DHT22);               //Ambient Temp/Humidity Sensor
 HX711 scale(HX711_DOUT, HX711_CLK);
 
 void setup()
@@ -46,6 +48,7 @@ void setup()
   
     dhtbot.begin();
     dhtbrood.begin();
+    dhtambient.begin();
     scale.set_scale(SCALE_CALIBRATION_FACTOR);
     scale.set_offset(SCALE_ZERO_FACTOR);
 }
@@ -63,6 +66,8 @@ void loop()
     add_pair(F("bot_humidity"), String((int)(dhtbot.readHumidity()*10)));
     add_pair(F("brood_temp"), String((int)(dhtbrood.readTemperature()*10)));
     add_pair(F("brood_humidity"), String((int)(dhtbrood.readHumidity()*10)));
+    add_pair(F("ambient_temp"), String((int)(dhtambient.readTemperature()*10)));
+    add_pair(F("ambient_humidity"), String((int)(dhtambient.readHumidity()*10)));
     add_pair(F("hive_lbs"), String((int)(scale.get_units()*100)));
     
     send_data(full_data_to_send);
